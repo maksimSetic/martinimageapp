@@ -1,0 +1,777 @@
+.app {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px);
+  z-index: -1;
+  transition: background-image 0.5s ease-in-out;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.header:hover {
+  opacity: 1;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.category-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.category-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.category-button:hover,
+.category-button.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.grid-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+}
+
+.grid-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.grid-button-fixed {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  backdrop-filter: blur(4px);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.grid-button-fixed:hover {
+  background: rgba(0, 0, 0, 0.85);
+  transform: scale(1.1);
+}
+
+.cart-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.cart-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-menu-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+  display: none;
+}
+
+.mobile-menu-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-menu {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  z-index: 15;
+  min-width: 200px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-menu-categories {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.mobile-category-button {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
+  border-radius: 5px;
+}
+
+.mobile-category-button:hover,
+.mobile-category-button.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-menu-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 5px 0;
+}
+
+.mobile-menu-item {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.mobile-menu-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow: auto;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-selector {
+    display: none;
+  }
+
+  .grid-button,
+  .cart-button {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .header {
+    padding: 15px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .carousel-container {
+    padding: 60px 10px 10px 10px;
+    overflow: hidden;
+  }
+
+  .carousel-content {
+    overflow: hidden;
+  }
+
+  .thumbnail-sidebar {
+    display: none;
+  }
+
+  .carousel-content {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .image-wrapper {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 40px;
+  }
+
+  .carousel-image {
+    max-height: 80vh;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .carousel-image.current {
+    pointer-events: auto;
+  }
+
+  .nav-button {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .image-info {
+    max-width: 100%;
+  }
+
+  .grid-view {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
+  .grid-item {
+    aspect-ratio: auto;
+    height: 400px;
+  }
+
+  .grid-item-info {
+    opacity: 1;
+    padding: 15px 10px 10px 10px;
+  }
+
+  .grid-item-title {
+    font-size: 1rem;
+  }
+
+  .grid-item-price {
+    font-size: 1rem;
+  }
+
+  /* Mobile carousel view */
+  .image-wrapper {
+    height: 50vh;
+    max-height: 50vh;
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* previously hid sidebar on small screens; now always show layout
+     so rules moved into mobile media query if needed */
+
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  /* allow container to fill whatever space is available in the main display
+     so that the selected image can stretch to a YouTube‑style wide aspect */
+  width: 100%;
+  position: relative;
+}
+
+.carousel-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* desktop-specific layout, mimicking YouTube's video list on right */
+.desktop-layout {
+  display: flex;
+  flex-direction: row; /* ensure thumbnails sit beside main display */
+  width: 100%;
+}
+.thumbnail-sidebar {
+  flex: 1;
+  max-width: 300px;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.85);
+  /* ensure sidebar scrolls independently of main display */
+  /* fill full height provided by parent container */
+  height: 100%;
+}
+
+/* give the main image more space relative to sidebar */
+.main-display {
+  /* make the main panel dominate the layout; increase ratio for a wider view
+     relative to the thumbnail sidebar */
+  flex: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.thumbnail-sidebar {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.thumbnail-item {
+  margin-bottom: 15px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.thumbnail-item.active,
+.thumbnail-item:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.thumbnail-item img {
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.nav-buttons-container {
+  display: flex;
+  gap: 180px;
+  justify-content: center;
+}
+
+.image-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(98vw, 1200px);
+  touch-action: none;
+  user-select: none;
+  transition: transform 0.3s ease;
+  position: relative;
+  height: 50vh;
+  max-height: 50vh;
+  overflow: hidden;
+}
+
+.image-wrapper.dragging {
+  transition: none;
+  cursor: grabbing;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel-image:hover {
+  transform: scale(1.05);
+}
+
+.image-info {
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+.image-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.support-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.support-label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.support-links {
+  display: flex;
+  gap: 12px;
+}
+
+.support-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.support-link svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.support-link:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+.support-link.paypal {
+  background: #003087;
+  color: #fff;
+}
+
+.support-link.patreon {
+  background: #ff424d;
+  color: #fff;
+}
+
+.category {
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.add-to-cart {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background: #218838;
+}
+
+.nav-button {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.prev {
+}
+
+.next {
+}
+
+.cart-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.cart-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.cart-content h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.cart-item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-details p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.remove-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.remove-button:hover {
+  background: #c82333;
+}
+
+.cart-total {
+  text-align: right;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.checkout-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.checkout-button:hover {
+  background: #0056b3;
+}
+
+.close-cart {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.close-cart:hover {
+  background: #545b62;
+}
+
+.notification {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 30;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.grid-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: 250px;
+  align-content: start;
+  gap: 15px;
+  padding: 100px 20px 20px 20px;
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.grid-item {
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.grid-item-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 10px 8px 8px 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.grid-item:hover .grid-item-info {
+  opacity: 1;
+}
+
+.grid-item-title {
+  margin: 0 0 3px 0;
+  font-weight: bold;
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.grid-item-price {
+  margin: 0;
+  color: #ffc107;
+  font-weight: bold;
+  font-size: 0.85rem;
+}

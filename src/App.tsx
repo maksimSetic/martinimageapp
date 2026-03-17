@@ -95,8 +95,18 @@ function App() {
       return true;
     });
 
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    try {
+      const saved = localStorage.getItem("gallery-favorites");
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
+
   const categories = [
     "All",
+    ...(favorites.size > 0 ? ["Favorites"] : []),
     ...Array.from(new Set(images.map((img) => img.category))),
   ];
 
@@ -123,9 +133,22 @@ function App() {
   const dragStartY = useRef(0);
   const hasDragged = useRef(false);
   const swipeTimeout = useRef<number | null>(null);
+  const slideshowRef = useRef<number | null>(null);
 
   // Dedicated state for background image URL
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
+  const [showLightbox, setShowLightbox] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const toggleFavorite = (src: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(src)) next.delete(src);
+      else next.add(src);
+      localStorage.setItem("gallery-favorites", JSON.stringify([...next]));
+      return next;
+    });
+  };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (isAnimatingSwipe) return;
@@ -234,7 +257,9 @@ function App() {
   const filteredImages =
     selectedCategory === "All"
       ? images
-      : images.filter((img) => img.category === selectedCategory);
+      : selectedCategory === "Favorites"
+        ? images.filter((img) => favorites.has(img.src))
+        : images.filter((img) => img.category === selectedCategory);
 
   const currentImage = filteredImages[currentIndex];
 
@@ -274,6 +299,47 @@ function App() {
       }
     };
   }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (showLightbox) {
+        if (e.key === "Escape") setShowLightbox(false);
+        if (e.key === "ArrowRight")
+          setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
+        if (e.key === "ArrowLeft")
+          setCurrentIndex(
+            (prev) =>
+              (prev - 1 + filteredImages.length) % filteredImages.length,
+          );
+      } else if (!showGridView) {
+        if (e.key === "ArrowRight")
+          setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
+        if (e.key === "ArrowLeft")
+          setCurrentIndex(
+            (prev) =>
+              (prev - 1 + filteredImages.length) % filteredImages.length,
+          );
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showLightbox, showGridView, filteredImages.length]);
+
+  // Slideshow autoplay
+  useEffect(() => {
+    if (isPlaying) {
+      slideshowRef.current = window.setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
+      }, 3500);
+    }
+    return () => {
+      if (slideshowRef.current) {
+        window.clearInterval(slideshowRef.current);
+        slideshowRef.current = null;
+      }
+    };
+  }, [isPlaying, filteredImages.length]);
 
   const currentTransform = (() => {
     if (isAnimatingSwipe && swipeDirection) {
@@ -415,6 +481,40 @@ function App() {
             </div>
             <div className="image-info">
               <p className="image-title">{filteredImages[currentIndex]?.alt}</p>
+              <p className="image-counter">
+                {currentIndex + 1} / {filteredImages.length}
+              </p>
+            </div>
+            <div className="image-actions">
+              <button
+                className={`action-button favorite-btn${
+                  currentImage && favorites.has(currentImage.src)
+                    ? " active"
+                    : ""
+                }`}
+                onClick={() => currentImage && toggleFavorite(currentImage.src)}
+                title={
+                  currentImage && favorites.has(currentImage.src)
+                    ? "Remove from favorites"
+                    : "Add to favorites"
+                }
+              >
+                {currentImage && favorites.has(currentImage.src) ? "♥" : "♡"}
+              </button>
+              <button
+                className={`action-button slideshow-btn${isPlaying ? " active" : ""}`}
+                onClick={() => setIsPlaying(!isPlaying)}
+                title={isPlaying ? "Pause slideshow" : "Play slideshow"}
+              >
+                {isPlaying ? "⏸" : "▶"}
+              </button>
+              <button
+                className="action-button zoom-btn"
+                onClick={() => setShowLightbox(true)}
+                title="View fullscreen"
+              >
+                ⤢
+              </button>
             </div>
             <div className="support-section">
               <span className="support-label">Podržite me</span>
@@ -546,8 +646,71 @@ function App() {
               <div className="grid-item-info">
                 <p className="grid-item-title">{image.alt}</p>
               </div>
+              <button
+                className={`grid-favorite-btn${favorites.has(image.src) ? " active" : ""}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(image.src);
+                }}
+                title={
+                  favorites.has(image.src)
+                    ? "Remove from favorites"
+                    : "Add to favorites"
+                }
+              >
+                {favorites.has(image.src) ? "♥" : "♡"}
+              </button>
             </div>
           ))}
+        </div>
+      )}
+      {showLightbox && currentImage && (
+        <div
+          className="lightbox-overlay"
+          onClick={() => setShowLightbox(false)}
+        >
+          <button
+            className="lightbox-close"
+            onClick={() => setShowLightbox(false)}
+          >
+            ✕
+          </button>
+          <button
+            className="lightbox-nav lightbox-prev"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(
+                (prev) =>
+                  (prev - 1 + filteredImages.length) % filteredImages.length,
+              );
+            }}
+          >
+            ‹
+          </button>
+          <img
+            src={currentImage.src}
+            alt={currentImage.alt}
+            className="lightbox-image"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button
+            className="lightbox-nav lightbox-next"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
+            }}
+          >
+            ›
+          </button>
+          <div
+            className="lightbox-caption"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="lightbox-title">{currentImage.alt}</span>
+            <span className="lightbox-count">
+              {currentIndex + 1} / {filteredImages.length}
+            </span>
+          </div>
         </div>
       )}
     </div>

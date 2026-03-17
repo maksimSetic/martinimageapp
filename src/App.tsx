@@ -307,6 +307,7 @@ function App() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
+          to_email: "martin.sirovica@gmail.com",
           customer_name: orderForm.name,
           customer_email: orderForm.email,
           customer_phone: orderForm.phone,
@@ -320,10 +321,9 @@ function App() {
       );
       setOrderSubmitted(true);
       setCart([]);
-    } catch {
-      setOrderError(
-        "Slanje nije uspjelo. Kontaktirajte me direktno na e-mail.",
-      );
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : JSON.stringify(err);
+      setOrderError(`Slanje nije uspjelo: ${msg}`);
     } finally {
       setOrderSubmitting(false);
     }
@@ -565,14 +565,6 @@ function App() {
         <h1>Martin Sirovica</h1>
         <div className="header-buttons">
           <button
-            className="cart-header-btn"
-            onClick={() => setShowCart(true)}
-            title="Košarica"
-          >
-            🛒
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-          </button>
-          <button
             className="mobile-menu-button"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             title="Menu"
@@ -615,6 +607,14 @@ function App() {
         title="Toggle Grid View"
       >
         ⊞
+      </button>
+      <button
+        className="cart-btn-fixed"
+        onClick={() => setShowCart(true)}
+        title="Košarica"
+      >
+        🛒
+        {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
       </button>
       {!showGridView ? (
         <div className="carousel-container desktop-layout">

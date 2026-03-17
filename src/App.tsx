@@ -9,6 +9,19 @@ interface ImageItem {
 }
 
 function App() {
+  // ============================================================
+  // SOCIAL & SUPPORT LINKS — update these with your own URLs
+  // ============================================================
+  const socialLinks = {
+    paypal: "https://www.paypal.com/paypalme/MartinSirovica",
+    patreon: "https://www.patreon.com/YOUR_USERNAME",
+    kofi: "https://ko-fi.com/martinsirovica",
+    email: "mailto:martin.sirovica@gmail.com",
+    instagram: "https://www.instagram.com/martin_sirovica",
+    facebook: "https://www.facebook.com/martin.sirovica",
+  };
+  // ============================================================
+
   // Automatically load all images from ./assets/martinslike/
   // (Place your own images into src/assets/martinslike/)
   const imageModules = import.meta.glob("./assets/martinslike/*.jpeg", {
@@ -407,7 +420,7 @@ function App() {
               <span className="support-label">Podržite me</span>
               <div className="support-links">
                 <a
-                  href="https://www.paypal.com"
+                  href={socialLinks.paypal}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="support-link paypal"
@@ -423,7 +436,7 @@ function App() {
                   PayPal
                 </a>
                 <a
-                  href="https://www.patreon.com"
+                  href={socialLinks.patreon}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="support-link patreon"
@@ -437,6 +450,68 @@ function App() {
                     <path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z" />
                   </svg>
                   Patreon
+                </a>
+                <a
+                  href={socialLinks.kofi}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="support-link kofi"
+                  title="Ko-fi"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.147.095-.372.026c-.225-.068-.187-.396-.187-.396l-.463-9.819h4.85l-.463 9.819s.038.328-.187.396c-.225.069-.372-.026-.372-.026zm4.305-3.455c-.643.658-1.558.995-2.467.995-.941 0-1.857-.366-2.494-1.062l4.961-3.976v4.043zm6.732 2.012c-.619 3.176-3.621 3.397-3.621 3.397l-.463-9.819h2.438l-.234 7.806c1.135-.234 1.673-1.135 1.88-1.384z" />
+                  </svg>
+                  Ko-fi
+                </a>
+                <a
+                  href={socialLinks.email}
+                  className="support-link email"
+                  title="E-mail"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z" />
+                  </svg>
+                  E-mail
+                </a>
+                <a
+                  href={socialLinks.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="support-link instagram"
+                  title="Instagram"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                  </svg>
+                  Instagram
+                </a>
+                <a
+                  href={socialLinks.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="support-link facebook"
+                  title="Facebook"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                  Facebook
                 </a>
               </div>
             </div>

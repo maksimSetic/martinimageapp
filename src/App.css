@@ -476,7 +476,9 @@
 
 .support-links {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 .support-link {
@@ -511,6 +513,26 @@
 
 .support-link.patreon {
   background: #ff424d;
+  color: #fff;
+}
+
+.support-link.kofi {
+  background: #29abe0;
+  color: #fff;
+}
+
+.support-link.email {
+  background: #555;
+  color: #fff;
+}
+
+.support-link.instagram {
+  background: #e1306c;
+  color: #fff;
+}
+
+.support-link.facebook {
+  background: #1877f2;
   color: #fff;
 }
 

@@ -331,7 +331,7 @@ function App() {
     if (isPlaying) {
       slideshowRef.current = window.setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % filteredImages.length);
-      }, 3500);
+      }, 1800);
     }
     return () => {
       if (slideshowRef.current) {
@@ -433,6 +433,7 @@ function App() {
               >
                 {currentImage && !isDragging && (
                   <img
+                    key={currentImage.src}
                     src={currentImage.src}
                     alt={currentImage.alt}
                     className="carousel-image current"
@@ -460,6 +461,13 @@ function App() {
                       zIndex: 2,
                     }}
                   />
+                )}
+                {currentImage && !isDragging && (
+                  <div className="carousel-image-hover-overlay">
+                    <span className="carousel-image-hover-name">
+                      {currentImage.alt}
+                    </span>
+                  </div>
                 )}
               </div>
               <div className="nav-buttons-container">

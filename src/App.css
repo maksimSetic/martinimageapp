@@ -240,7 +240,7 @@
   }
 
   .carousel-container {
-    padding: 60px 10px 10px 10px;
+    padding: 60px 4px 10px 4px;
     overflow: hidden;
   }
 
@@ -261,9 +261,9 @@
   }
 
   .image-wrapper {
-    width: 100%;
-    max-width: 100%;
-    padding-right: 40px;
+    width: 96%;
+    max-width: 96%;
+    padding-right: 0;
   }
 
   .carousel-image {
@@ -416,7 +416,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(80vw, 1000px);
+  width: 100%;
   touch-action: none;
   user-select: none;
   transition: transform 0.3s ease;
@@ -424,11 +424,30 @@
   height: 50vh;
   max-height: 50vh;
   overflow: hidden;
+  border-radius: 10px;
+}
+
+@media (min-width: 769px) {
+  .image-wrapper {
+    width: min(68vw, 860px);
+  }
 }
 
 .image-wrapper.dragging {
   transition: none;
   cursor: grabbing;
+}
+
+/* Entry animation for incoming image */
+@keyframes carouselEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .carousel-image {
@@ -437,12 +456,57 @@
   object-fit: fill;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
   cursor: pointer;
+  animation: carouselEnter 0.4s ease both;
 }
 
 .carousel-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Hover name overlay */
+.carousel-image-hover-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 18px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.18) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.image-wrapper:hover .carousel-image-hover-overlay {
+  opacity: 1;
+}
+
+.carousel-image-hover-name {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  text-align: center;
+  padding: 0 16px;
+  transform: translateY(6px);
+  transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover .carousel-image-hover-name {
+  transform: translateY(0);
 }
 
 .image-info {
@@ -574,15 +638,26 @@
   height: 60px;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .nav-button:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.12);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+}
+
+.nav-button:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .nav-button:disabled {

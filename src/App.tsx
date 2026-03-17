@@ -727,22 +727,6 @@ function App() {
               >
                 🛒
               </button>
-              <button
-                className={`action-button download-btn${isDonor ? "" : " locked"}`}
-                onClick={() => {
-                  if (isDonor) {
-                    currentImage &&
-                      downloadImage(currentImage.src, currentImage.alt);
-                  } else {
-                    setShowUnlockModal(true);
-                  }
-                }}
-                title={
-                  isDonor ? "Download image" : "Donors only — click to unlock"
-                }
-              >
-                {isDonor ? "↓" : "🔒"}
-              </button>
             </div>
             <div className="support-section">
               <span className="support-label">Podržite me</span>

@@ -188,9 +188,6 @@ function App() {
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   const [showLightbox, setShowLightbox] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isDonor, setIsDonor] = useState(
-    () => localStorage.getItem("gallery-donor") === "true",
-  );
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [unlockInput, setUnlockInput] = useState("");
   const [unlockError, setUnlockError] = useState(false);
@@ -221,23 +218,12 @@ function App() {
 
   const handleUnlockSubmit = () => {
     if (unlockInput.trim() === DONATION_CODE) {
-      localStorage.setItem("gallery-donor", "true");
-      setIsDonor(true);
       setShowUnlockModal(false);
       setUnlockInput("");
       setUnlockError(false);
     } else {
       setUnlockError(true);
     }
-  };
-
-  const downloadImage = (src: string, name: string) => {
-    const a = document.createElement("a");
-    a.href = src;
-    a.download = `${name}.jpeg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
   };
 
   const cartTotal = cart.reduce(

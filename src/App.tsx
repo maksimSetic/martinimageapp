@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import "./App.css";
 
 interface ImageItem {
@@ -6,6 +7,26 @@ interface ImageItem {
   alt: string;
   price: number;
   category: string;
+}
+
+interface PrintSize {
+  label: string;
+  price: number;
+}
+
+interface CartItem {
+  image: ImageItem;
+  size: PrintSize;
+  quantity: number;
+}
+
+interface OrderForm {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  note: string;
 }
 
 function App() {
@@ -20,6 +41,34 @@ function App() {
     instagram: "https://www.instagram.com/martin_sirovica",
     facebook: "https://www.facebook.com/martin.sirovica",
   };
+  // ============================================================
+
+  // ============================================================
+  // DONATION UNLOCK CODE — change this to any secret word/code
+  // you share with donors after they donate.
+  // ============================================================
+  const DONATION_CODE = "martin2024";
+  // ============================================================
+
+  // ============================================================
+  // EMAILJS CONFIG — sign up free at https://www.emailjs.com
+  // Replace these with your Service ID, Template ID, Public Key
+  // ============================================================
+  const EMAILJS_SERVICE_ID = "service_e1rteh8";
+  const EMAILJS_TEMPLATE_ID = "template_q1b4kkq";
+  const EMAILJS_PUBLIC_KEY = "KXG425G7qulDtfOeK";
+  // ============================================================
+
+  // ============================================================
+  // PRINT SIZES & PRICES — edit to suit your offerings
+  // ============================================================
+  const PRINT_SIZES: PrintSize[] = [
+    { label: "10×15 cm", price: 9.99 },
+    { label: "20×30 cm", price: 19.99 },
+    { label: "30×45 cm", price: 34.99 },
+    { label: "40×60 cm", price: 49.99 },
+    { label: "50×75 cm", price: 69.99 },
+  ];
   // ============================================================
 
   // Automatically load all images from ./assets/martinslike/
@@ -139,6 +188,146 @@ function App() {
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
   const [showLightbox, setShowLightbox] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isDonor, setIsDonor] = useState(
+    () => localStorage.getItem("gallery-donor") === "true",
+  );
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const [unlockInput, setUnlockInput] = useState("");
+  const [unlockError, setUnlockError] = useState(false);
+
+  // Shop state
+  const [productModalImage, setProductModalImage] = useState<ImageItem | null>(
+    null,
+  );
+  const [selectedSize, setSelectedSize] = useState<PrintSize>(PRINT_SIZES[1]);
+  const [productQty, setProductQty] = useState(1);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [showCart, setShowCart] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<
+    "paypal" | "pouzece" | null
+  >(null);
+  const [orderForm, setOrderForm] = useState<OrderForm>({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    note: "",
+  });
+  const [orderSubmitting, setOrderSubmitting] = useState(false);
+  const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [orderError, setOrderError] = useState("");
+
+  const handleUnlockSubmit = () => {
+    if (unlockInput.trim() === DONATION_CODE) {
+      localStorage.setItem("gallery-donor", "true");
+      setIsDonor(true);
+      setShowUnlockModal(false);
+      setUnlockInput("");
+      setUnlockError(false);
+    } else {
+      setUnlockError(true);
+    }
+  };
+
+  const downloadImage = (src: string, name: string) => {
+    const a = document.createElement("a");
+    a.href = src;
+    a.download = `${name}.jpeg`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const cartTotal = cart.reduce(
+    (sum, item) => sum + item.size.price * item.quantity,
+    0,
+  );
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const openProductModal = (image: ImageItem) => {
+    setProductModalImage(image);
+    setSelectedSize(PRINT_SIZES[1]);
+    setProductQty(1);
+  };
+
+  const addToCart = () => {
+    if (!productModalImage) return;
+    setCart((prev) => {
+      const existing = prev.findIndex(
+        (i) =>
+          i.image.src === productModalImage.src &&
+          i.size.label === selectedSize.label,
+      );
+      if (existing >= 0) {
+        const next = [...prev];
+        next[existing] = {
+          ...next[existing],
+          quantity: next[existing].quantity + productQty,
+        };
+        return next;
+      }
+      return [
+        ...prev,
+        { image: productModalImage, size: selectedSize, quantity: productQty },
+      ];
+    });
+    setProductModalImage(null);
+    setShowCart(true);
+  };
+
+  const removeFromCart = (index: number) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const submitOrder = async () => {
+    if (
+      !orderForm.name ||
+      !orderForm.email ||
+      !orderForm.phone ||
+      !orderForm.address ||
+      !orderForm.city
+    ) {
+      setOrderError("Molim ispunite sva obavezna polja.");
+      return;
+    }
+    setOrderSubmitting(true);
+    setOrderError("");
+    const itemsList = cart
+      .map(
+        (i) =>
+          `${i.image.alt} — ${i.size.label} × ${i.quantity} kom = ${(
+            i.size.price * i.quantity
+          ).toFixed(2)} €`,
+      )
+      .join("\n");
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          customer_name: orderForm.name,
+          customer_email: orderForm.email,
+          customer_phone: orderForm.phone,
+          customer_address: `${orderForm.address}, ${orderForm.city}`,
+          order_items: itemsList,
+          order_total: `${cartTotal.toFixed(2)} €`,
+          payment_method: "Pouzeće",
+          note: orderForm.note || "—",
+        },
+        EMAILJS_PUBLIC_KEY,
+      );
+      setOrderSubmitted(true);
+      setCart([]);
+    } catch {
+      setOrderError(
+        "Slanje nije uspjelo. Kontaktirajte me direktno na e-mail.",
+      );
+    } finally {
+      setOrderSubmitting(false);
+    }
+  };
 
   const toggleFavorite = (src: string) => {
     setFavorites((prev) => {
@@ -376,6 +565,14 @@ function App() {
         <h1>Martin Sirovica</h1>
         <div className="header-buttons">
           <button
+            className="cart-header-btn"
+            onClick={() => setShowCart(true)}
+            title="Košarica"
+          >
+            🛒
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </button>
+          <button
             className="mobile-menu-button"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             title="Menu"
@@ -440,7 +637,7 @@ function App() {
                     style={{ zIndex: 1 }}
                     onClick={() => {
                       if (!isDragging && !hasDragged.current) {
-                        setShowGridView(true);
+                        openProductModal(currentImage);
                       }
                     }}
                   />
@@ -522,6 +719,29 @@ function App() {
                 title="View fullscreen"
               >
                 ⤢
+              </button>
+              <button
+                className="action-button cart-btn"
+                onClick={() => currentImage && openProductModal(currentImage)}
+                title="Dodaj u košaricu"
+              >
+                🛒
+              </button>
+              <button
+                className={`action-button download-btn${isDonor ? "" : " locked"}`}
+                onClick={() => {
+                  if (isDonor) {
+                    currentImage &&
+                      downloadImage(currentImage.src, currentImage.alt);
+                  } else {
+                    setShowUnlockModal(true);
+                  }
+                }}
+                title={
+                  isDonor ? "Download image" : "Donors only — click to unlock"
+                }
+              >
+                {isDonor ? "↓" : "🔒"}
               </button>
             </div>
             <div className="support-section">
@@ -645,10 +865,7 @@ function App() {
             <div
               key={index}
               className="grid-item"
-              onClick={() => {
-                setCurrentIndex(index);
-                setShowGridView(false);
-              }}
+              onClick={() => openProductModal(image)}
             >
               <img src={image.src} alt={image.alt} />
               <div className="grid-item-info">
@@ -670,6 +887,370 @@ function App() {
               </button>
             </div>
           ))}
+        </div>
+      )}
+      {/* ── PRODUCT SIZE MODAL ──────────────────────── */}
+      {productModalImage && (
+        <div
+          className="shop-overlay"
+          onClick={() => setProductModalImage(null)}
+        >
+          <div className="shop-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="shop-close"
+              onClick={() => setProductModalImage(null)}
+            >
+              ✕
+            </button>
+            <div className="shop-modal-inner">
+              <img
+                src={productModalImage.src}
+                alt={productModalImage.alt}
+                className="shop-preview"
+              />
+              <div className="shop-details">
+                <h2 className="shop-title">{productModalImage.alt}</h2>
+                <p className="shop-subtitle">Odaberite dimenzije ispisa</p>
+                <div className="shop-sizes">
+                  {PRINT_SIZES.map((size) => (
+                    <button
+                      key={size.label}
+                      className={`shop-size-btn${selectedSize.label === size.label ? " active" : ""}`}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      <span className="shop-size-label">{size.label}</span>
+                      <span className="shop-size-price">
+                        {size.price.toFixed(2)} €
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                <div className="shop-qty-row">
+                  <label className="shop-qty-label">Količina</label>
+                  <div className="shop-qty-controls">
+                    <button
+                      className="shop-qty-btn"
+                      onClick={() => setProductQty((q) => Math.max(1, q - 1))}
+                    >
+                      −
+                    </button>
+                    <span className="shop-qty-value">{productQty}</span>
+                    <button
+                      className="shop-qty-btn"
+                      onClick={() => setProductQty((q) => q + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <p className="shop-total">
+                  Ukupno:{" "}
+                  <strong>
+                    {(selectedSize.price * productQty).toFixed(2)} €
+                  </strong>
+                </p>
+                <button className="shop-add-btn" onClick={addToCart}>
+                  Dodaj u košaricu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CART MODAL ──────────────────────────────── */}
+      {showCart && (
+        <div className="shop-overlay" onClick={() => setShowCart(false)}>
+          <div
+            className="cart-modal-panel"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="cart-modal-header">
+              <h2>Košarica</h2>
+              <button className="shop-close" onClick={() => setShowCart(false)}>
+                ✕
+              </button>
+            </div>
+            {cart.length === 0 ? (
+              <p className="cart-empty">Košarica je prazna.</p>
+            ) : (
+              <>
+                <div className="cart-items-list">
+                  {cart.map((item, idx) => (
+                    <div key={idx} className="cart-row">
+                      <img
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        className="cart-row-img"
+                      />
+                      <div className="cart-row-info">
+                        <p className="cart-row-title">{item.image.alt}</p>
+                        <p className="cart-row-meta">
+                          {item.size.label} × {item.quantity} kom
+                        </p>
+                        <p className="cart-row-price">
+                          {(item.size.price * item.quantity).toFixed(2)} €
+                        </p>
+                      </div>
+                      <button
+                        className="cart-row-remove"
+                        onClick={() => removeFromCart(idx)}
+                        title="Ukloni"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="cart-footer">
+                  <p className="cart-footer-total">
+                    Ukupno: <strong>{cartTotal.toFixed(2)} €</strong>
+                  </p>
+                  <button
+                    className="cart-checkout-btn"
+                    onClick={() => {
+                      setShowCart(false);
+                      setShowCheckout(true);
+                      setPaymentMethod(null);
+                      setOrderSubmitted(false);
+                      setOrderError("");
+                    }}
+                  >
+                    Naruči
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── CHECKOUT MODAL ──────────────────────────── */}
+      {showCheckout && (
+        <div
+          className="shop-overlay"
+          onClick={() => {
+            if (!orderSubmitting) setShowCheckout(false);
+          }}
+        >
+          <div className="checkout-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="cart-modal-header">
+              <h2>
+                {orderSubmitted ? "Narudžba primljena ✅" : "Odabir plaćanja"}
+              </h2>
+              {!orderSubmitting && (
+                <button
+                  className="shop-close"
+                  onClick={() => setShowCheckout(false)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            {orderSubmitted ? (
+              <div className="order-success">
+                <p>
+                  Hvala na narudžbi! Javit ću se što prije na vaš e-mail ili
+                  telefon.
+                </p>
+                <button
+                  className="cart-checkout-btn"
+                  onClick={() => setShowCheckout(false)}
+                >
+                  Zatvori
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Order summary */}
+                <div className="checkout-summary">
+                  {cart.map((item, idx) => (
+                    <div key={idx} className="checkout-summary-row">
+                      <span>
+                        {item.image.alt} — {item.size.label} × {item.quantity}
+                      </span>
+                      <span>
+                        {(item.size.price * item.quantity).toFixed(2)} €
+                      </span>
+                    </div>
+                  ))}
+                  <div className="checkout-summary-total">
+                    <span>Ukupno</span>
+                    <strong>{cartTotal.toFixed(2)} €</strong>
+                  </div>
+                </div>
+
+                {/* Payment method */}
+                <p className="checkout-label">Način plaćanja</p>
+                <div className="checkout-methods">
+                  <button
+                    className={`checkout-method-btn${
+                      paymentMethod === "paypal" ? " active" : ""
+                    }`}
+                    onClick={() => setPaymentMethod("paypal")}
+                  >
+                    💳 Online (PayPal)
+                  </button>
+                  <button
+                    className={`checkout-method-btn${
+                      paymentMethod === "pouzece" ? " active" : ""
+                    }`}
+                    onClick={() => setPaymentMethod("pouzece")}
+                  >
+                    📦 Pouzeće
+                  </button>
+                </div>
+
+                {paymentMethod === "paypal" && (
+                  <div className="checkout-paypal">
+                    <p>
+                      Bit ćete preusmjereni na PayPal za plaćanje iznosa od{" "}
+                      <strong>{cartTotal.toFixed(2)} €</strong>. Nakon plaćanja
+                      kontaktirajte me da dogovorimo dostavu.
+                    </p>
+                    <a
+                      href={`${socialLinks.paypal}/${cartTotal.toFixed(2)}EUR`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cart-checkout-btn"
+                      onClick={() => setShowCheckout(false)}
+                    >
+                      Plati putem PayPal
+                    </a>
+                  </div>
+                )}
+
+                {paymentMethod === "pouzece" && (
+                  <div className="checkout-form">
+                    <p className="checkout-form-note">
+                      Ispunite obrazac i ja ću vam se javiti za potvrdu.
+                    </p>
+                    <div className="checkout-fields">
+                      <input
+                        className="checkout-input"
+                        placeholder="Ime i prezime *"
+                        value={orderForm.name}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({ ...f, name: e.target.value }))
+                        }
+                      />
+                      <input
+                        className="checkout-input"
+                        placeholder="E-mail *"
+                        type="email"
+                        value={orderForm.email}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({
+                            ...f,
+                            email: e.target.value,
+                          }))
+                        }
+                      />
+                      <input
+                        className="checkout-input"
+                        placeholder="Telefon *"
+                        type="tel"
+                        value={orderForm.phone}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({
+                            ...f,
+                            phone: e.target.value,
+                          }))
+                        }
+                      />
+                      <input
+                        className="checkout-input"
+                        placeholder="Adresa dostave *"
+                        value={orderForm.address}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({
+                            ...f,
+                            address: e.target.value,
+                          }))
+                        }
+                      />
+                      <input
+                        className="checkout-input"
+                        placeholder="Grad / Poštanski broj *"
+                        value={orderForm.city}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({ ...f, city: e.target.value }))
+                        }
+                      />
+                      <textarea
+                        className="checkout-input checkout-textarea"
+                        placeholder="Napomena (nije obavezno)"
+                        value={orderForm.note}
+                        onChange={(e) =>
+                          setOrderForm((f) => ({ ...f, note: e.target.value }))
+                        }
+                      />
+                    </div>
+                    {orderError && (
+                      <p className="checkout-error">{orderError}</p>
+                    )}
+                    <button
+                      className="cart-checkout-btn"
+                      onClick={submitOrder}
+                      disabled={orderSubmitting}
+                    >
+                      {orderSubmitting ? "Slanje..." : "Pošalji narudžbu"}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showUnlockModal && (
+        <div
+          className="unlock-overlay"
+          onClick={() => {
+            setShowUnlockModal(false);
+            setUnlockInput("");
+            setUnlockError(false);
+          }}
+        >
+          <div className="unlock-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="unlock-title">🔓 Donors Only</h2>
+            <p className="unlock-desc">
+              Download access is available to donors. After donating, you will
+              receive an unlock code.
+            </p>
+            <input
+              className={`unlock-input${unlockError ? " error" : ""}`}
+              type="password"
+              placeholder="Enter your donation code"
+              value={unlockInput}
+              onChange={(e) => {
+                setUnlockInput(e.target.value);
+                setUnlockError(false);
+              }}
+              onKeyDown={(e) => e.key === "Enter" && handleUnlockSubmit()}
+              autoFocus
+            />
+            {unlockError && (
+              <p className="unlock-error">Incorrect code. Please try again.</p>
+            )}
+            <div className="unlock-actions">
+              <button className="unlock-submit" onClick={handleUnlockSubmit}>
+                Unlock
+              </button>
+              <button
+                className="unlock-cancel"
+                onClick={() => {
+                  setShowUnlockModal(false);
+                  setUnlockInput("");
+                  setUnlockError(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
       {showLightbox && currentImage && (

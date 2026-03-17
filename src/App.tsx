@@ -650,6 +650,16 @@ function App() {
                     <span className="carousel-image-hover-name">
                       {currentImage.alt}
                     </span>
+                    <button
+                      className="carousel-add-to-cart-btn"
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openProductModal(currentImage);
+                      }}
+                    >
+                      🛒 Dodaj u košaricu
+                    </button>
                   </div>
                 )}
               </div>

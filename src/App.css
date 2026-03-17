@@ -503,9 +503,11 @@
   inset: 0;
   border-radius: 10px;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   padding-bottom: 18px;
+  gap: 10px;
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.72) 0%,
@@ -520,6 +522,7 @@
 
 .image-wrapper:hover .carousel-image-hover-overlay {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .carousel-image-hover-name {
@@ -536,6 +539,29 @@
 
 .image-wrapper:hover .carousel-image-hover-name {
   transform: translateY(0);
+}
+
+.carousel-add-to-cart-btn {
+  background: #fbbf24;
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transform: translateY(6px);
+  transition:
+    transform 0.3s ease,
+    background 0.2s ease;
+}
+
+.image-wrapper:hover .carousel-add-to-cart-btn {
+  transform: translateY(0);
+}
+
+.carousel-add-to-cart-btn:hover {
+  background: #f59e0b;
 }
 
 .image-info {

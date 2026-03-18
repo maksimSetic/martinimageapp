@@ -183,6 +183,8 @@ function App() {
   const hasDragged = useRef(false);
   const swipeTimeout = useRef<number | null>(null);
   const slideshowRef = useRef<number | null>(null);
+  // Holds preloaded Image objects so the browser doesn't GC them before painting
+  const preloadedImages = useRef<Map<string, HTMLImageElement>>(new Map());
 
   // Dedicated state for background image URL
   const [backgroundUrl, setBackgroundUrl] = useState<string>("");
@@ -518,6 +520,39 @@ function App() {
     };
   }, [isPlaying, filteredImages.length]);
 
+  // Preload neighbors immediately when the index changes so the next swipe
+  // never shows a white frame while the browser fetches the image.
+  useEffect(() => {
+    const preload = (src: string) => {
+      if (preloadedImages.current.has(src)) return;
+      const el = new window.Image();
+      el.src = src;
+      preloadedImages.current.set(src, el);
+    };
+    // Preload 4 ahead and 2 behind
+    for (let offset = -2; offset <= 4; offset++) {
+      const idx =
+        (currentIndex + offset + filteredImages.length) % filteredImages.length;
+      if (filteredImages[idx]) preload(filteredImages[idx].src);
+    }
+  }, [currentIndex, filteredImages]);
+
+  // After the LCP settles, silently preload every remaining image so that
+  // no matter how fast the user swipes there are no more white flashes.
+  useEffect(() => {
+    const tid = window.setTimeout(() => {
+      filteredImages.forEach((img) => {
+        if (!preloadedImages.current.has(img.src)) {
+          const el = new window.Image();
+          el.src = img.src;
+          preloadedImages.current.set(img.src, el);
+        }
+      });
+    }, 1500);
+    return () => window.clearTimeout(tid);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Prevent right-click saving and common download shortcuts
   useEffect(() => {
     const preventRightClick = (e: MouseEvent) => {
@@ -660,8 +695,7 @@ function App() {
                     alt={swipedImage.alt}
                     className="carousel-image current"
                     draggable={false}
-                    loading="lazy"
-                    decoding="async"
+                    decoding="sync"
                     onContextMenu={(e) => e.preventDefault()}
                     style={{
                       transform: currentTransform,

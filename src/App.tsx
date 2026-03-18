@@ -516,6 +516,26 @@ function App() {
     };
   }, [isPlaying, filteredImages.length]);
 
+  // Prevent right-click saving and common download shortcuts
+  useEffect(() => {
+    const preventRightClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).tagName === "IMG") {
+        e.preventDefault();
+      }
+    };
+    const preventShortcuts = (e: KeyboardEvent) => {
+      if (e.ctrlKey && (e.key === "s" || e.key === "u" || e.key === "p")) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("contextmenu", preventRightClick);
+    document.addEventListener("keydown", preventShortcuts);
+    return () => {
+      document.removeEventListener("contextmenu", preventRightClick);
+      document.removeEventListener("keydown", preventShortcuts);
+    };
+  }, []);
+
   const currentTransform = (() => {
     if (isAnimatingSwipe && swipeDirection) {
       const distance = 1200;
@@ -621,6 +641,8 @@ function App() {
                     alt={currentImage.alt}
                     className="carousel-image current"
                     style={{ zIndex: 1 }}
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
                     onClick={() => {
                       if (!isDragging && !hasDragged.current) {
                         openProductModal(currentImage);
@@ -633,6 +655,8 @@ function App() {
                     src={swipedImage.src}
                     alt={swipedImage.alt}
                     className="carousel-image current"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
                     style={{
                       transform: currentTransform,
                       transition: currentTransition,
@@ -662,6 +686,7 @@ function App() {
                     </button>
                   </div>
                 )}
+                <div className="watermark-overlay" />
               </div>
               <div className="nav-buttons-container">
                 <button
@@ -834,7 +859,12 @@ function App() {
                   setCurrentIndex(idx);
                 }}
               >
-                <img src={img.src} alt={img.alt} />
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
               </div>
             ))}
           </div>
@@ -847,7 +877,13 @@ function App() {
               className="grid-item"
               onClick={() => openProductModal(image)}
             >
-              <img src={image.src} alt={image.alt} />
+              <img
+                src={image.src}
+                alt={image.alt}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+              <div className="watermark-overlay" />
               <div className="grid-item-info">
                 <p className="grid-item-title">{image.alt}</p>
               </div>
@@ -883,11 +919,16 @@ function App() {
               ✕
             </button>
             <div className="shop-modal-inner">
-              <img
-                src={productModalImage.src}
-                alt={productModalImage.alt}
-                className="shop-preview"
-              />
+              <div className="shop-preview-wrap">
+                <img
+                  src={productModalImage.src}
+                  alt={productModalImage.alt}
+                  className="shop-preview"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                <div className="watermark-overlay" />
+              </div>
               <div className="shop-details">
                 <h2 className="shop-title">{productModalImage.alt}</h2>
                 <p className="shop-subtitle">Odaberite dimenzije ispisa</p>
@@ -962,6 +1003,8 @@ function App() {
                         src={item.image.src}
                         alt={item.image.alt}
                         className="cart-row-img"
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
                       />
                       <div className="cart-row-info">
                         <p className="cart-row-title">{item.image.alt}</p>
@@ -1256,12 +1299,19 @@ function App() {
           >
             ‹
           </button>
-          <img
-            src={currentImage.src}
-            alt={currentImage.alt}
-            className="lightbox-image"
+          <div
+            className="lightbox-img-wrap"
             onClick={(e) => e.stopPropagation()}
-          />
+          >
+            <img
+              src={currentImage.src}
+              alt={currentImage.alt}
+              className="lightbox-image"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            <div className="watermark-overlay" />
+          </div>
           <button
             className="lightbox-nav lightbox-next"
             onClick={(e) => {

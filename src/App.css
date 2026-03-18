@@ -1287,11 +1287,35 @@
   gap: 0;
 }
 
-.shop-preview {
+/* Wraps each gallery image to host the watermark overlay */
+.watermark-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='110'%3E%3Ctext x='110' y='55' font-family='Arial%2Csans-serif' font-size='14' fill='rgba(255%2C255%2C255%2C.22)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-35%2C 110%2C 55)'%3E%C2%A9 Martin Sirovica%3C%2Ftext%3E%3C%2Fsvg%3E");
+  background-repeat: repeat;
+  background-size: 220px 110px;
+  user-select: none;
+  border-radius: inherit;
+}
+
+.shop-preview-wrap {
+  position: relative;
   width: 45%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.shop-preview {
+  width: 100%;
   object-fit: cover;
   display: block;
-  flex-shrink: 0;
+}
+
+.lightbox-img-wrap {
+  position: relative;
+  display: inline-flex;
 }
 
 .shop-details {
@@ -1769,6 +1793,11 @@
 @media (max-width: 768px) {
   .shop-modal-inner {
     flex-direction: column;
+  }
+
+  .shop-preview-wrap {
+    width: 100%;
+    max-height: 40vh;
   }
 
   .shop-preview {

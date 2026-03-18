@@ -1,12 +1,123 @@
 <!doctype html>
-<html lang="en">
+<html lang="hr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>galleryapp</title>
+
+    <!-- Crawl directives -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- Primary SEO -->
+    <title>Martin Sirovica | Fotograf &ndash; Galerija fotografija</title>
+    <meta
+      name="description"
+      content="Galerija fotografija Martina Sirovice &mdash; priroda, crkve, Zagreb, znamenitosti i događaji. Kupite print fotografija po povoljnim cijenama."
+    />
+    <meta
+      name="keywords"
+      content="Martin Sirovica, fotograf, fotografija, galerija, print, priroda, Zagreb, Hrvatske crkve, kupnja fotografija"
+    />
+    <meta name="author" content="Martin Sirovica" />
+    <link rel="canonical" href="https://martinsirovica.netlify.app/" />
+
+    <!-- Geographic relevance -->
+    <meta name="geo.region" content="HR" />
+    <meta name="geo.placename" content="Zagreb, Hrvatska" />
+    <meta name="geo.position" content="45.8150;15.9819" />
+    <meta name="ICBM" content="45.8150, 15.9819" />
+
+    <!-- PWA / browser chrome -->
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Open Graph (Facebook, WhatsApp, Viber …) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://martinsirovica.netlify.app/" />
+    <meta
+      property="og:title"
+      content="Martin Sirovica | Fotograf &ndash; Galerija fotografija"
+    />
+    <meta
+      property="og:description"
+      content="Galerija fotografija Martina Sirovice &mdash; priroda, crkve, Zagreb i još. Naručite print u raznim veličinama."
+    />
+    <meta property="og:locale" content="hr_HR" />
+    <meta property="og:site_name" content="Martin Sirovica Fotografija" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Martin Sirovica | Fotograf" />
+    <meta
+      name="twitter:description"
+      content="Galerija fotografija Martina Sirovice &mdash; priroda, crkve, Zagreb i još."
+    />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/vite.svg" />
+
+    <!-- JSON-LD: Person -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Martin Sirovica",
+        "url": "https://martinsirovica.netlify.app/",
+        "jobTitle": "Fotograf",
+        "email": "martin.sirovica@gmail.com",
+        "sameAs": [
+          "https://www.instagram.com/martin_sirovica",
+          "https://www.facebook.com/martin.sirovica",
+          "https://ko-fi.com/martinsirovica",
+          "https://www.paypal.com/paypalme/MartinSirovica"
+        ],
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://martinsirovica.netlify.app/",
+          "name": "Martin Sirovica | Galerija fotografija",
+          "description": "Galerija i online prodaja print fotografija Martina Sirovice.",
+          "inLanguage": "hr"
+        }
+      }
+    </script>
+
+    <!-- JSON-LD: WebSite (enables sitelinks search box signal) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Martin Sirovica Fotografija",
+        "url": "https://martinsirovica.netlify.app/",
+        "description": "Galerija i online prodaja print fotografija Martina Sirovice &mdash; priroda, crkve, Zagreb, znamenitosti.",
+        "inLanguage": "hr",
+        "author": {
+          "@type": "Person",
+          "name": "Martin Sirovica"
+        }
+      }
+    </script>
   </head>
   <body>
+    <!-- Noscript fallback: visible to crawlers that don't run JavaScript -->
+    <noscript>
+      <div style="font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px">
+        <h1>Martin Sirovica &ndash; Galerija fotografija</h1>
+        <p>
+          Dobro došli na galeriju fotografija Martina Sirovice. Fotografije obuhvaćaju
+          prirodu, crkve, Zagreb, znamenitosti i događaje. Dostupna je kupnja print
+          fotografija u raznim veličinama &mdash; 10×15 cm do 50×75 cm.
+        </p>
+        <p>
+          Kontakt: <a href="mailto:martin.sirovica@gmail.com">martin.sirovica@gmail.com</a><br />
+          Instagram: <a href="https://www.instagram.com/martin_sirovica">@martin_sirovica</a>
+        </p>
+        <p>Ova stranica zahtijeva JavaScript za puni prikaz galerije.</p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

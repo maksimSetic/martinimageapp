@@ -294,6 +294,8 @@ function App() {
         EMAILJS_TEMPLATE_ID,
         {
           to_email: "martin.sirovica@gmail.com",
+          to_name: "Martin Sirovica",
+          reply_to: orderForm.email,
           customer_name: orderForm.name,
           customer_email: orderForm.email,
           customer_phone: orderForm.phone,
@@ -642,6 +644,8 @@ function App() {
                     className="carousel-image current"
                     style={{ zIndex: 1 }}
                     draggable={false}
+                    fetchPriority="high"
+                    decoding="sync"
                     onContextMenu={(e) => e.preventDefault()}
                     onClick={() => {
                       if (!isDragging && !hasDragged.current) {
@@ -656,6 +660,8 @@ function App() {
                     alt={swipedImage.alt}
                     className="carousel-image current"
                     draggable={false}
+                    loading="lazy"
+                    decoding="async"
                     onContextMenu={(e) => e.preventDefault()}
                     style={{
                       transform: currentTransform,
@@ -863,6 +869,8 @@ function App() {
                   src={img.src}
                   alt={img.alt}
                   draggable={false}
+                  loading="lazy"
+                  decoding="async"
                   onContextMenu={(e) => e.preventDefault()}
                 />
               </div>
@@ -881,6 +889,8 @@ function App() {
                 src={image.src}
                 alt={image.alt}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 onContextMenu={(e) => e.preventDefault()}
               />
               <div className="watermark-overlay" />
@@ -925,6 +935,8 @@ function App() {
                   alt={productModalImage.alt}
                   className="shop-preview"
                   draggable={false}
+                  loading="lazy"
+                  decoding="async"
                   onContextMenu={(e) => e.preventDefault()}
                 />
                 <div className="watermark-overlay" />
@@ -1004,6 +1016,8 @@ function App() {
                         alt={item.image.alt}
                         className="cart-row-img"
                         draggable={false}
+                        loading="lazy"
+                        decoding="async"
                         onContextMenu={(e) => e.preventDefault()}
                       />
                       <div className="cart-row-info">
@@ -1308,6 +1322,8 @@ function App() {
               alt={currentImage.alt}
               className="lightbox-image"
               draggable={false}
+              loading="lazy"
+              decoding="async"
               onContextMenu={(e) => e.preventDefault()}
             />
             <div className="watermark-overlay" />

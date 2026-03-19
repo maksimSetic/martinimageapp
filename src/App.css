@@ -311,6 +311,8 @@
     width: 96%;
     max-width: 96%;
     padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .carousel-image {
@@ -331,6 +333,14 @@
 
   .image-info {
     max-width: 100%;
+    min-height: 3rem;
+  }
+
+  .image-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
 
   .grid-view {
@@ -532,6 +542,12 @@
     box-shadow 0.35s ease;
   cursor: pointer;
   animation: carouselEnter 0.4s ease both;
+}
+
+@media (max-width: 768px) {
+  .carousel-image {
+    animation: none;
+  }
 }
 
 .carousel-image:hover {
@@ -1497,6 +1513,29 @@
 
 .shop-add-btn:hover {
   background: #f59e0b;
+  transform: scale(1.02);
+}
+
+.shop-back-btn {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.15s;
+  width: 100%;
+}
+
+.shop-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
   transform: scale(1.02);
 }
 

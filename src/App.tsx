@@ -647,9 +647,9 @@ function App() {
       <button
         className="grid-button-fixed"
         onClick={() => setShowGridView(!showGridView)}
-        title="Toggle Grid View"
+        title={showGridView ? "Full Screen View" : "Toggle Grid View"}
       >
-        ⊞
+        {showGridView ? "⛶" : "⊞"}
       </button>
       <button
         className="cart-btn-fixed"
@@ -1018,6 +1018,12 @@ function App() {
                 </p>
                 <button className="shop-add-btn" onClick={addToCart}>
                   Dodaj u košaricu
+                </button>
+                <button
+                  className="shop-back-btn"
+                  onClick={() => setProductModalImage(null)}
+                >
+                  &#8592; Natrag
                 </button>
               </div>
             </div>

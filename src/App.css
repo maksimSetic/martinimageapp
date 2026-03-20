@@ -169,7 +169,7 @@
   cursor: pointer;
   font-size: 1.2rem;
   transition: background 0.3s ease;
-  display: none;
+  display: block;
 }
 
 .mobile-menu-button:hover {

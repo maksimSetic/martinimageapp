@@ -78,51 +78,57 @@ function App() {
   }) as Record<string, { default: string }>;
 
   // Map each filename to a category. Update these to match your images.
-  // Any filename not listed here will be assigned "Ostalo".
+  // Any filename not listed here will be assigned "Priroda".
   const categoryMap: Record<string, string> = {
-    "AstrofotoSava.jpeg": "Priroda",
+    // ── Crkve ────────────────────────────────────────────────
+    "Crkva .jpeg": "Crkve",
     "Crkva.jpeg": "Crkve",
-    "Crkva2.jpeg": "Crkve",
-    "Crkva3.jpeg": "Crkve",
-    "Crkva4.jpeg": "Crkve",
-    "Crkva5.jpeg": "Crkve",
-    "Crkva6.jpeg": "Crkve",
-    "Crkva7.jpeg": "Crkve",
-    "Crkva8.jpeg": "Crkve",
-    "CrkvaStenjevec.jpeg": "Crkve",
-    "CrnaMlakaPotokBrebrenica.jpeg": "Priroda",
-    "GospaHipodromZagreb.jpeg": "Zagreb",
-    "HrvatskiSokolSinjHipodrom.jpeg": "Događaji",
-    "JarunZagreb.jpeg": "Zagreb",
-    "JezeroPeručaCetina.jpeg": "Priroda",
-    "KartaZagreb.jpeg": "Zagreb",
-    "KraljuDmitreZvonimireHipodromZagreb.jpeg": "Događaji",
-    "MarijaBistrica.jpeg": "Crkve",
-    "MarijaBistrica2.jpeg": "Crkve",
-    "OkićGrad.jpeg": "Znamenitosti",
-    "OkićGrad2.jpeg": "Znamenitosti",
-    "OkićGrad3.jpeg": "Znamenitosti",
-    "OkićGrad4.jpeg": "Znamenitosti",
-    "Panorama s Japetića 2.jpeg": "Priroda",
-    "Panorama s Japetića 3.jpeg": "Priroda",
-    "Panorama s Japetića 4.jpeg": "Priroda",
-    "Panorama s Japetića 5.jpeg": "Priroda",
-    "Panorama s Japetića 6.jpeg": "Priroda",
-    "Panorama s Japetića.jpeg": "Priroda",
+    "Gospa Hipodrom Zagreb.jpeg": "Crkve",
+    "Gospin Park Stenjevec 2025..jpeg": "Crkve",
+    "Gospin perivoj - Majka Božja.jpeg": "Crkve",
+    "Majka Božja Okićka - Dan Svih Svetih 2025..jpeg": "Crkve",
+    "Majka Božja Volavska Čudotvorna - Južni portal.jpeg": "Crkve",
+    "Majka Božja Volavska Čudotvorna - Velika Gospa 2019..jpeg": "Crkve",
+    "Marija Bistrica.jpeg": "Crkve",
+    "Marija Bistrica 2.jpeg": "Crkve",
+    "Sveti Duje - Peristil, Split 2025..jpeg": "Crkve",
+    "Sveti Lovro Vivodina.jpeg": "Crkve",
+    "Sveti Martin pod Okić gradom - Astrofoto 2025..jpeg": "Crkve",
+    "Sveti Martin pod Okićem - 2025..jpeg": "Crkve",
+    // ── Znamenitosti ─────────────────────────────────────────
+    "Dedin pogled s Terihajskog brega na Okić grad - 2024..jpeg":
+      "Znamenitosti",
+    "Karta Zagreb i okolica, Coronelli 1686..jpeg": "Znamenitosti",
+    "Okić grad iz Konšćice - 2024..jpeg": "Znamenitosti",
+    "Okić grad nad morem magle s vrha Japetića - 2025..jpeg": "Znamenitosti",
+    "Okić grad s Klaka u magli - 2024..jpeg": "Znamenitosti",
+    // ── Događaji ─────────────────────────────────────────────
+    "Hrvatski Sokol Sinj Hipodrom.jpeg": "Događaji",
+    "Kralju Dmitre Zvonimire Hipodrom Zagreb.jpeg": "Događaji",
+    // ── Priroda ──────────────────────────────────────────────
+    "Astrofoto Sava.jpeg": "Priroda",
+    "Crna Mlaka Potok - Brebrenica.jpeg": "Priroda",
+    "Jarun.jpeg": "Priroda",
+    "Jastrebarsko s vrha Japetića - 2025..jpeg": "Priroda",
+    "Jezero Peruča Cetina.jpeg": "Priroda",
+    "Julijske Alpe s vrha Japetića - 2025..jpeg": "Priroda",
+    "Planinarski dom Žitnica na Japetiću 2025..jpeg": "Priroda",
+    "Plešivica i Okić grad nad morem magle s vrha Japetića 2025..jpeg":
+      "Priroda",
     "Prozor-Cetina.jpeg": "Priroda",
-    "SavaZagreb.jpeg": "Zagreb",
-    "SvetiLovroVivodina.jpeg": "Crkve",
+    "Sava.jpeg": "Priroda",
+    "Slap Brisalo - Slapnica Žumberak 2025..jpeg": "Priroda",
     "Svibanj potok Volavje.jpeg": "Priroda",
-    "Trag u Beskraju - Zlarin 2023..jpeg": "Znamenitosti",
+    "Sveta Gera s vrha Japetića - 2025..jpeg": "Priroda",
+    "Trag u Beskraju - Zlarin 2023..jpeg": "Priroda",
     "Vatra.jpeg": "Priroda",
-    "Zlarin 2023..jpeg": "Znamenitosti",
-    "ŽumberakSlapnica.jpeg": "Priroda",
-    "ŽumberakSlapnica2.jpeg": "Priroda",
-    "ŽumberakSlapnica3.jpeg": "Priroda",
-    "ŽumberakSlapnica4.jpeg": "Priroda",
-    "ŽumberakSlapnica5.jpeg": "Priroda",
-    "ŽumberakSlapnica6.jpeg": "Priroda",
-    "ŽumberSlapnica6.jpeg": "Priroda",
+    "Zlarin 2023..jpeg": "Priroda",
+    "Žumberak Slapnica.jpeg": "Priroda",
+    "Žumberak Slapnica 3.jpeg": "Priroda",
+    "Žumberak Slapnica 4.jpeg": "Priroda",
+    "Žumberak Slapnica 5.jpeg": "Priroda",
+    "Žumberak Slapnica 6.jpeg": "Priroda",
+    "Žumberak Slapnica 7.jpeg": "Priroda",
   };
 
   // Only keep unique images by src
@@ -153,13 +159,26 @@ function App() {
     }
   });
 
-  const categories = [
-    "All",
-    ...(favorites.size > 0 ? ["Favorites"] : []),
-    ...Array.from(new Set(images.map((img) => img.category))),
+  const CATEGORY_ORDER = [
+    "Sve",
+    "Crkve",
+    "Znamenitosti",
+    "Događaji",
+    "Priroda",
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const categories = [
+    ...CATEGORY_ORDER.filter(
+      (c) => c === "Sve" || images.some((img) => img.category === c),
+    ),
+    ...(favorites.size > 0 ? ["Favoriti"] : []),
+    // Any category not in the predefined order goes at the end
+    ...Array.from(new Set(images.map((img) => img.category))).filter(
+      (c) => !CATEGORY_ORDER.includes(c),
+    ),
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState("Sve");
   const [currentIndex, setCurrentIndex] = useState(() =>
     Math.max(
       0,
@@ -434,9 +453,9 @@ function App() {
   };
 
   const filteredImages =
-    selectedCategory === "All"
+    selectedCategory === "Sve"
       ? images
-      : selectedCategory === "Favorites"
+      : selectedCategory === "Favoriti"
         ? images.filter((img) => favorites.has(img.src))
         : images.filter((img) => img.category === selectedCategory);
 

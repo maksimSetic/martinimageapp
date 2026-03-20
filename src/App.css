@@ -288,6 +288,7 @@
 
   .carousel-container {
     padding: 60px 4px 80px 4px;
+    box-sizing: border-box;
     overflow: visible;
   }
 

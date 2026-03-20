@@ -515,6 +515,37 @@
   }
 }
 
+/* ── "Classic/Desktop view" on phones (980px–1100px viewport) ── */
+@media (min-width: 769px) and (max-width: 1100px) {
+  /* Shrink sidebar so the image gets most of the space */
+  .thumbnail-sidebar {
+    max-width: 120px;
+    padding: 10px 6px;
+  }
+  .thumbnail-item img {
+    width: 96px;
+    height: 96px;
+  }
+  /* Tighten the nav button gap */
+  .nav-buttons-container {
+    gap: 60px;
+  }
+  /* Give the image wrapper more height */
+  .image-wrapper {
+    height: 55vh;
+    max-height: 55vh;
+    width: min(72vw, 700px);
+  }
+}
+
+/* On any touch device the header must always be visible
+   (there is no hover on touch, so opacity:0 hides it permanently) */
+@media (pointer: coarse) {
+  .header {
+    opacity: 1;
+  }
+}
+
 .image-wrapper.dragging {
   transition: none;
   cursor: grabbing;
